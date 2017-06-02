@@ -41,9 +41,45 @@ def player_score():
 				save_score(names_scores)
 				return int(names_scores[player_name])
 
+def choose_word():
+	"""Function that choose a word in the liste_mot"""
+	for i, elt in enumerate(liste_mot): # choose a word in the list
+		nb_mot = int(i) + 1
+	indice_hasard = random.randrange(nb_mot)
+	mot_choisi = liste_mot[indice_hasard].upper()
+	return mot_choisi
 
-def affichage_jeu(mot, lettres_non_presentes, chances_restantes):
-	print("{} \nLettres déjà utilisées : {} \nChances restantes : {}".format(mot, lettres_non_presentes, chances_restantes))
+def choose_lettre():
+	""" Function that verify the letter's format""" 
+	valid_lettre = False # valid letter
+	while valid_lettre == False:
+		lettre_choisi = input("Choisir une lettre : ")
+		lettre_choisi = lettre_choisi.upper()
+		for i, elt in enumerate(lettres):
+			if lettre_choisi == elt:
+				valid_lettre = True
+				return lettre_choisi
+				break
+			else:
+				valid_lettre = False
+				if i == len(lettres) - 1:
+					print("Ce n'est pas une lettre!!!")
+
+def letter_is_or_not_in_word(lettre_choisi,list_lettre_mot):
+	"""Function to know if the letter is in the word or not"""
+	for i, elt in enumerate(list_lettre_mot):
+		if lettre_choisi == elt:
+			print ( "Bien, la lettre ", lettre_choisi, "est présente dans le mot")
+			return True
+			break
+		else:
+			if i == len(list_lettre_mot) - 1:
+				print("Désolé, la lettre ",lettre_choisi, " n'est pas dans le mot")
+				return False
+
+def affichage_jeu(mot_cache, lettres_non_presentes, chances_restantes):
+	"""Function for screen game : chances, word with * and letter found, list of letters that's not in the word""" 
+	print("\n Chances restantes : {}\n\n Lettres déjà utilisées qui ne sont pas dans le mot : {}\n\n {}\n".format(chances_restantes, lettres_non_presentes, mot_cache))
 
 def game():
 	"""Fonction qui lance le jeu avec 8 chances au départ
@@ -52,22 +88,8 @@ def game():
 		Fin du jeu : si toute les lettres sont découvertes -> GAGNE score = score + chances restantes
 					si chance < 0  PERDU score = score """
 	
-	for i, elt in enumerate(liste_mot): # choose a word in the list
-		nb_mot = int(i) + 1
-	indice_hasard = random.randrange(nb_mot)
-	mot_choisi = liste_mot[indice_hasard].upper()
-	print(mot_choisi)
+	mot_choisi = choose_word()
 	
-	i = 0 # hide letter
-	mot_cache = ""
-	while i < len(mot_choisi):
-		mot_cache += "*"
-		i += 1
-	
-	chances_restantes = chances
-	lettres_non_presentes = ""
-	affichage_jeu(mot_cache, lettres_non_presentes, chances_restantes)
-
 	list_lettre_mot = []
 	i = 0
 	while i < len(mot_choisi):
@@ -75,31 +97,57 @@ def game():
 		i += 1
 	print(list_lettre_mot)
 
-	valid_lettre = False # valid letter
-	while valid_lettre == False:
-		lettre_choisi = input("Choisir une lettre : ")
-		lettre_choisi = lettre_choisi.upper()
-		for i, elt in enumerate(lettres):
-			if lettre_choisi == elt:
-				valid_lettre = True
-				break
-			else:
-				valid_lettre = False
-				if i == len(lettres) - 1:
-					print("Ce n'est pas une lettre!!!")
-	
-	letter_in_word = False # letter in the word?
+	list_lettre_mot_cachee = []
 	for i, elt in enumerate(list_lettre_mot):
-		if lettre_choisi == elt:
-			letter_in_word = True
-			print ( "Bien, la lettre ", lettre_choisi, "est présente dans le mot")
-			break
+		list_lettre_mot_cachee += ["*"]
+
+	mot_cache = "".join(list_lettre_mot_cachee) # hide letter
+#	for i in list_lettre_mot:
+#		mot_cache += "*"
+#	i = 0 # hide letter
+#	mot_cache = ""
+#	while i < len(mot_choisi):
+#		mot_cache += "*"
+#		i += 1
+	lettres_non_presentes = ""
+	chances_restantes = 8
+	affichage_jeu(mot_cache, lettres_non_presentes, chances_restantes)
+	while chances_restantes > 0:
+		lettre_choisi=choose_lettre()
+		print(lettre_choisi)
+
+		if letter_is_or_not_in_word(lettre_choisi,list_lettre_mot) == False:
+			lettres_non_presentes += str(lettre_choisi)
+			chances_restantes -= 1
 		else:
-			if i == len(list_lettre_mot) - 1:
-				print("Désolé, la lettre ",lettre_choisi, " n'est pas dans le mot")
-				lettres_non_presentes += str(lettre_choisi)
-				chances_restantes -= 1
-				affichage_jeu(mot_cache, lettres_non_presentes, chances_restantes)
+			for i, elt in enumerate(list_lettre_mot):
+				if lettre_choisi == elt:
+					ind = i
+			print(ind)
+			list_lettre_mot_cachee[ind] = str(lettre_choisi)
+			mot_cache = "".join(list_lettre_mot_cachee)
+		affichage_jeu(mot_cache, lettres_non_presentes, chances_restantes)
+	else:
+		print("perdu")
+ 
+
+#	list_lettre_mot = []
+#	i = 0
+#	while i < len(mot_choisi):
+#		list_lettre_mot += [mot_choisi[i]]
+#		i += 1
+#	print(list_lettre_mot)
+#
+#	lettre_choisi = choose_lettre()
+#	if letter_is_or_not_in_word(lettre_choisi, list_lettre_mot) == True:
+#		print(lettre_choisi)
+#	else:
+#		lettres_non_presentes += str(lettre_choisi)
+#		chances_restantes -= 1
+	
+#	affichage_jeu(mot_cache, lettres_non_presentes, chances_restantes)
+
+
 				
 
 		
