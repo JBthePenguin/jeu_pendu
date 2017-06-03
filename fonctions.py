@@ -15,15 +15,6 @@ def player_score(player_name):
 	vérifie si il y a au moins 1 caractère,
 	l'enregistre dans scores avec un score de 0 s'il est nouveau et renvoie le score
 	si il est déjà enregistré, renvoie le score"""
-#	player_name = input("Qui es-tu? : ")
-#	player_name = str(player_name)
-	
-#	while player_name == "":
-#		print("???? Oh! Un nom vide n'est pas possible ????")
-#		player_name = input("Qui es-tu? : ")
-#		player_name = str(player_name)
-
-#	else:
 	try:
 		open("scores", "r")
 	except FileNotFoundError:
@@ -100,7 +91,6 @@ def game():
 	while i < len(mot_choisi):
 		list_lettre_mot += [mot_choisi[i]]
 		i += 1
-	print(list_lettre_mot) #test
 
 	list_lettre_mot_cachee = [] # list word's letter with *
 	for i, elt in enumerate(list_lettre_mot):
@@ -113,7 +103,6 @@ def game():
 	while chances_restantes > 0:
 		affichage_jeu(mot_cache, lettres_non_presentes, chances_restantes)
 		lettre_choisi=choose_lettre()
-		print(lettre_choisi) #test
 		
 		if letter_is_or_not_in_word(lettre_choisi,list_lettre_mot) == False:
 			lettres_non_presentes += ("  " +str(lettre_choisi))
@@ -127,13 +116,13 @@ def game():
 		
 		if list_lettre_mot_cachee == list_lettre_mot:
 			gain = int(chances_restantes)
-			print("GAGNE!!!! Tu as gagné {} point(s)!".format(gain))
+			print("\n {} \n GAGNE!!!! Tu as gagné {} point(s)!".format(mot_choisi.upper(), gain))
 			return gain
 			break
 	
 	else:
 		gain = 0
-		print("PERDU")
+		print("\nPERDU!!! Le mot était {} .".format(mot_choisi.upper()))
 		return gain
  
  
